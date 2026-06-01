@@ -3,6 +3,8 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { loginUser, registerUser } from "@/app/api/authApi";
+import { Eye, EyeOff } from "lucide-react";
+import { toast } from "react-hot-toast";
 
 type FormMode = "login" | "register";
 
@@ -13,6 +15,12 @@ export default function AuthPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [emailError, setEmailError] = useState("");
+
+  const validateEmail = (email: string) => {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  };
 
   useEffect(() => {
     if (typeof window !== "undefined" && localStorage.getItem("token")) {
@@ -24,6 +32,17 @@ export default function AuthPage() {
     e.preventDefault();
 
     setMessage("");
+    setEmailError("");
+
+    if (!validateEmail(email)) {
+      toast.error("Please enter a valid email address");
+      return;
+    }
+
+    if (password.length < 8) {
+      toast.error("Password must be at least 8 characters");
+      return;
+    }
 
     try {
       if (mode === "register") {
@@ -32,7 +51,9 @@ export default function AuthPage() {
           password,
         });
 
-        setMessage(response.message || "Registration successful");
+        toast.success("Account created successfully!");
+
+        toast.success(response.message || "Registration successful");
 
         setMode("login");
         setPassword("");
@@ -45,11 +66,13 @@ export default function AuthPage() {
         password,
       });
 
+      toast.success("Login successful!");
+
       localStorage.setItem("token", response.token);
 
       router.push("/pages/dashboard");
     } catch (error: any) {
-      setMessage(error?.response?.data?.message || "Something went wrong");
+      toast.error(error?.response?.data?.message || "Something went wrong");
     }
   };
 
@@ -107,7 +130,7 @@ export default function AuthPage() {
           </div>
         )}
 
-        <form onSubmit={submit} className="space-y-5 text-black">
+        <form onSubmit={submit} noValidate className="space-y-5 text-black">
           {/* Email */}
           <div>
             <label className="mb-2 block text-sm font-medium text-slate-700">
@@ -117,11 +140,18 @@ export default function AuthPage() {
             <input
               type="email"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => {
+                setEmail(e.target.value);
+                setEmailError("");
+              }}
               placeholder="Enter your email"
               className="w-full rounded-lg border border-slate-300 px-4 py-3 focus:border-blue-500 focus:outline-none"
               required
             />
+
+            {emailError && (
+              <p className="mt-1 text-sm text-red-500">{emailError}</p>
+            )}
           </div>
 
           {/* Password */}
@@ -131,22 +161,36 @@ export default function AuthPage() {
                 Password
               </label>
 
-              <button
+              {/* <button
                 type="button"
                 className="text-xs text-blue-600 hover:underline"
               >
                 Forgot Password?
+              </button> */}
+            </div>
+
+            <div className="relative">
+              <input
+                type={showPassword ? "text" : "password"}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Enter your password"
+                className="w-full rounded-lg border border-slate-300 px-4 py-3 pr-12 focus:border-blue-500 focus:outline-none"
+                required
+              />
+
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500"
+              >
+                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
               </button>
             </div>
 
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="Enter your password"
-              className="w-full rounded-lg border border-slate-300 px-4 py-3 focus:border-blue-500 focus:outline-none"
-              required
-            />
+            <p className="mt-1 text-xs text-gray-500">
+              Password must be at least 8 characters
+            </p>
           </div>
 
           {/* Submit */}

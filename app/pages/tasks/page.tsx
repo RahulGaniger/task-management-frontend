@@ -5,7 +5,7 @@ import { Search } from "lucide-react";
 import TaskCard from "@/app/components/task/TaskCard";
 import { getTasks, deleteTask } from "@/app/api/taskApi";
 import CreateTaskModal from "./CreateTask";
-import Sidebar from "@/app/components/Sidebar";
+import { toast } from "react-hot-toast";
 
 export default function TasksPage() {
   const [tasks, setTasks] = useState<any[]>([]);
@@ -14,6 +14,7 @@ export default function TasksPage() {
   const [priority, setPriority] = useState("");
   const [open, setOpen] = useState(false);
   const [selectedTask, setSelectedTask] = useState<any>(null);
+  const [deleteTaskId, setDeleteTaskId] = useState<string | null>(null);
 
   const fetchTasks = async () => {
     try {
@@ -41,12 +42,22 @@ export default function TasksPage() {
     setOpen(true);
   };
 
-  const handleDelete = async (id: string) => {
-    if (!confirm("Are you sure you want to delete this task?")) return;
+  const handleDelete = (id: string) => {
+    setDeleteTaskId(id);
+  };
 
-    await deleteTask(id);
+  const confirmDelete = async () => {
+    try {
+      await deleteTask(deleteTaskId!);
 
-    fetchTasks();
+      toast.success("Task deleted successfully");
+
+      fetchTasks();
+
+      setDeleteTaskId(null);
+    } catch (error) {
+      toast.error("Failed to delete task");
+    }
   };
 
   return (
@@ -131,6 +142,34 @@ export default function TasksPage() {
             />
           ))}
         </div>
+
+        {deleteTaskId && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+            <div className="w-full max-w-md rounded-xl bg-white p-6 shadow-xl">
+              <h2 className="text-lg font-semibold text-black">Delete Task</h2>
+
+              <p className="mt-2 text-gray-600">
+                Are you sure you want to delete this task?
+              </p>
+
+              <div className="mt-6 flex justify-end gap-3">
+                <button
+                  onClick={() => setDeleteTaskId(null)}
+                  className="rounded-md border px-4 py-2"
+                >
+                  Cancel
+                </button>
+
+                <button
+                  onClick={confirmDelete}
+                  className="rounded-md bg-red-600 px-4 py-2 text-white"
+                >
+                  Delete
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </>
   );

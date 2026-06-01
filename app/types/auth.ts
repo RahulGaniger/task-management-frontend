@@ -10,3 +10,9 @@ export interface LoginResponse {
     email: string;
   };
 }
+
+export interface JwtPayload {
+  id: string;
+  email: string;
+  name?: string;
+}

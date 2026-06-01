@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { X } from "lucide-react";
 import { createTask, updateTask } from "@/app/api/taskApi";
+import { toast } from "react-hot-toast";
 
 interface Props {
   isOpen: boolean;
@@ -64,8 +65,12 @@ export default function CreateTaskModal({
 
       if (task) {
         await updateTask(task.id, formData);
+
+        toast.success("Task updated successfully");
       } else {
         await createTask(formData);
+
+        toast.success("Task created successfully");
       }
 
       onSuccess?.();
@@ -73,8 +78,8 @@ export default function CreateTaskModal({
       onClose();
 
       setFormData(initialState);
-    } catch (error) {
-      console.error(error);
+    } catch (error: any) {
+      toast.error(error?.response?.data?.message || "Something went wrong");
     } finally {
       setLoading(false);
     }
