@@ -8,6 +8,7 @@ export default function DashboardPage() {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [loading, setLoading] = useState(true);
 
+  // Fetch tasks on mount
   useEffect(() => {
     const fetchTasks = async () => {
       try {
