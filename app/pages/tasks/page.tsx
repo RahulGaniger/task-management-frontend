@@ -7,6 +7,7 @@ import { getTasks, deleteTask } from "@/app/api/taskApi";
 import CreateTaskModal from "./CreateTask";
 import { toast } from "react-hot-toast";
 
+
 export default function TasksPage() {
   const [tasks, setTasks] = useState<any[]>([]);
   const [search, setSearch] = useState("");
@@ -15,6 +16,7 @@ export default function TasksPage() {
   const [open, setOpen] = useState(false);
   const [selectedTask, setSelectedTask] = useState<any>(null);
   const [deleteTaskId, setDeleteTaskId] = useState<string | null>(null);
+
 
   const fetchTasks = async () => {
     try {
