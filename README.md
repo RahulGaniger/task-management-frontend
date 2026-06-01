@@ -125,7 +125,7 @@ src/
 ### Clone Repository
 
 ```bash
-git clone <https://github.com/RahulGaniger/task-management-frontend.git>
+git clone https://github.com/RahulGaniger/task-management-frontend.git
 
 cd task-management-frontend
 ```
@@ -153,7 +153,7 @@ npm run dev
 Application will be available at:
 
 ```text
-http://localhost:3000
+https://task-management-frontend-ipyt.vercel.app/
 ```
 
 ---
@@ -173,7 +173,7 @@ NEXT_PUBLIC_API_URL=http://localhost:5000/api
 ### Production
 
 ```env
-NEXT_PUBLIC_API_URL=https://your-backend.onrender.com/api
+NEXT_PUBLIC_API_URL=https://task-management-backend-uck8.onrender.com/api
 ```
 
 ---
@@ -244,27 +244,13 @@ DELETE /tasks/:id
 3. Configure Environment Variables:
 
 ```env
-NEXT_PUBLIC_API_URL=(https://task-management-backend-uck8.onrender.com/api)
+NEXT_PUBLIC_API_URL=https://task-management-backend-uck8.onrender.com/api
 ```
 
 4. Deploy application.
 
 ---
 
-## Demo Video
-
-A short demo video should demonstrate:
-
-* User Registration
-* User Login
-* Dashboard Overview
-* Create Task
-* Edit Task
-* Delete Task
-* Search and Filter Tasks
-* Logout
-
----
 
 ## Future Improvements
 
