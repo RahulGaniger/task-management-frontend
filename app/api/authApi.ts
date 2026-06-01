@@ -1,6 +1,6 @@
 import api from "./api";
 import { AuthRequest, LoginResponse } from "@/app/types/auth";
-const AUTH_URL = process.env.NEXT_PUBLIC_API_URL;
+const AUTH_URL = process.env.NEXT_PUBLIC_API_URL || "https://task-management-backend-uck8.onrender.com/api";
 
 export const registerUser = async (
   data: AuthRequest,
